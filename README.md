@@ -76,7 +76,7 @@ swift-mx-builder/
 ## Running
 
 ```bash
-go mod tidy      # unduh dependency gin (butuh akses internet penuh)
+go mod tidy      # download gin dependency (need full internet access)
 go run main.go
 ```
 
