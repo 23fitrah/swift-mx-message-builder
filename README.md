@@ -1,19 +1,18 @@
 # SWIFT MX ISO 20022 Message Builder (Gin + Go)
 
-Project builder untuk generate pesan **SWIFT MX (ISO 20022)** — `pacs.008`,
-`pacs.009`, `pacs.002`, dan `pacs.004` — menggunakan **Gin** (Go web
-framework). Setiap pesan yang berhasil dibangun akan di-*marshal* menjadi
-XML format MX, lalu ditulis ke folder output secara **asynchronous**
-menggunakan **worker pool (goroutine)**, sehingga endpoint HTTP tidak
-perlu menunggu proses I/O selesai.
+A Go-based REST API for generating SWIFT MX (ISO 20022) messages.
 
-## Fitur
+This service accepts JSON requests and builds ISO 20022 compliant XML messages. It is designed to simplify the process of generating SWIFT MX messages and to provide a reusable component for banking and payment integrations.
 
-- 4 service pesan ISO 20022:
-  - **pacs.008.001.08** — FIToFICustomerCreditTransfer
-  - **pacs.009.001.08** — FinancialInstitutionCreditTransfer
-  - **pacs.002.001.10** — FIToFIPaymentStatusReport
-  - **pacs.004.001.09** — PaymentReturn
+The project follows a modular structure, making it easier to support additional message types as business requirements grow.
+
+## Feature
+
+- 4 service message ISO 20022:
+  - **pacs.008.001.08** — FI To FI Customer Credit Transfer
+  - **pacs.009.001.08** — Financial Institution Credit Transfer
+  - **pacs.002.001.10** — FI To FI Payment Status Reject Or Accept
+  - **pacs.004.001.09** — Payment Return
 - Setiap service punya:
   - `POST /generate` → membangun dokumen MX dan mengirim job ke worker pool
   - `GET /inquiry/:messageId` → **inquiry status message** untuk mengecek
@@ -22,13 +21,14 @@ perlu menunggu proses I/O selesai.
   menulis file `.xml` ke folder `output/{pacs008|pacs009|pacs002|pacs004}/`
 - Graceful shutdown (menunggu worker menyelesaikan job yang sedang berjalan)
 
-## Struktur Project
+##  Project Structure
 
 ```
 swift-mx-builder/
 ├── main.go                     # entrypoint, routing Gin
 ├── config/
 │   └── config.go               # konfigurasi (port, output dir, worker count)
+├── dto                         # request input
 ├── models/
 │   ├── common.go                # tipe bersama (GroupHeader, Party, dst.)
 │   ├── pacs008.go               # struct XML pacs.008.001.08
@@ -45,11 +45,13 @@ swift-mx-builder/
 │   └── worker.go                 # worker pool goroutine + status tracking
 ├── utils/
 │   ├── xmlbuilder.go             # marshal struct → MX XML
+│   ├── auth.go                   # Authorization middleware
+│   ├── validation.go             # validation input
 │   └── idgen.go                  # generator MsgId, TxId, UETR
 └── output/                       # folder tujuan file MX hasil generate
 ```
 
-## Menjalankan
+## Running
 
 ```bash
 go mod tidy      # unduh dependency gin (butuh akses internet penuh)
@@ -59,7 +61,7 @@ go run main.go
 Server berjalan di `http://localhost:8080` (ubah lewat env `APP_PORT`).
 Konfigurasi lain: `MX_OUTPUT_DIR` (default `./output`).
 
-## Contoh Pemakaian API
+## Example API
 
 ### 1. Generate pacs.008 (Customer Credit Transfer)
 
@@ -79,7 +81,7 @@ curl -X POST http://localhost:8080/api/v1/pacs008/generate \
   }'
 ```
 
-Response (202 Accepted):
+Response (200 Accepted):
 ```json
 {
   "message_id": "PACS008-20260706153012-A1B2C3",
@@ -91,7 +93,7 @@ Response (202 Accepted):
 }
 ```
 
-### 2. Cek status (inquiry)
+### 2. Check status (inquiry)
 
 ```bash
 curl http://localhost:8080/api/v1/pacs008/inquiry/PACS008-20260706153012-A1B2C3
@@ -153,17 +155,6 @@ curl -X POST http://localhost:8080/api/v1/pacs004/generate \
 
 ## Catatan Implementasi
 
-- Struct XML pada folder `models/` adalah versi **disederhanakan** dari
-  skema resmi ISO 20022 (elemen inti sudah mengikuti nama tag official:
-  `GrpHdr`, `CdtTrfTxInf`, `PmtId`, `IntrBkSttlmAmt`, `TxSts`, `RtrRsnInf`,
-  dsb). Untuk kebutuhan produksi/kepatuhan penuh terhadap skema SWIFT MX,
-  tambahkan elemen wajib lain sesuai spesifikasi resmi
-  (`Ccy`, `PstlAdr`, `RgltryRptg`, dll.) pada masing-masing struct.
-- Worker pool berjalan dalam proses yang sama (in-memory status map).
-  Untuk skala produksi/multi-instance, ganti status tracking dengan
-  Redis/database agar status inquiry konsisten lintas instance/pod.
-- Jalankan `go mod tidy` di lingkungan dengan akses internet penuh
-  (sandbox pengujian ini memblokir sebagian domain dependency Go seperti
-  `golang.org`, `gopkg.in`, `rsc.io` sehingga `go get` tidak bisa
-  menyelesaikan seluruh graph modul secara otomatis). Semua source code
-  telah divalidasi sintaksisnya dengan `gofmt`.
+- The XML models in the models/ directory are based on a simplified version of the ISO 20022 schema. Core elements such as GrpHdr, CdtTrfTxInf, PmtId, IntrBkSttlmAmt, TxSts, and RtrRsnInf follow the official SWIFT MX element names. If full ISO 20022 compliance is required, additional mandatory elements (such as Ccy, PstlAdr, RgltryRptg, and others) should be added according to the relevant message specification.
+- The worker pool currently runs within a single process and keeps job status in memory. This works well for development and single-instance deployments. For production environments with multiple instances or pods, use a shared storage such as Redis or a database so job status can be accessed consistently across all instances.
+- Run go mod tidy in an environment with internet access before building the project. Some Go module hosts may not be reachable in restricted or sandboxed environments, which can prevent dependencies from being downloaded successfully.

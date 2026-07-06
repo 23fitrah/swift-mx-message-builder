@@ -17,6 +17,6 @@ COPY --from=builder /app/.env .
 
 RUN chmod +x ./swift-mx-message-builder
 
-EXPOSE 8080
+EXPOSE 9090
 
 CMD ["./swift-mx-message-builder"]
