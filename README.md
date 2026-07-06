@@ -8,18 +8,18 @@ The project follows a modular structure, making it easier to support additional 
 
 ## Feature
 
-- 4 service message ISO 20022:
+- 4 services message ISO 20022:
   - **pacs.008.001.08** — FI To FI Customer Credit Transfer
   - **pacs.009.001.08** — Financial Institution Credit Transfer
   - **pacs.002.001.10** — FI To FI Payment Status Reject Or Accept
   - **pacs.004.001.09** — Payment Return
-- Setiap service punya:
-  - `POST /generate` → membangun dokumen MX dan mengirim job ke worker pool
-  - `GET /inquiry/:messageId` → **inquiry status message** untuk mengecek
-    progres penulisan file (`PENDING` → `PROCESSING` → `COMPLETED`/`FAILED`)
-- Worker pool goroutine (jumlah worker & ukuran antrian bisa dikonfigurasi)
-  menulis file `.xml` ke folder `output/{pacs008|pacs009|pacs002|pacs004}/`
-- Graceful shutdown (menunggu worker menyelesaikan job yang sedang berjalan)
+- Each service has:
+  - `POST /generate` → builds an MX document and sends the job to the worker pool
+  - `GET /inquiry/:messageId` → **inquiry status message** to check
+file writing progress (`PENDING` → `PROCESSING` → `COMPLETED`/`FAILED`)
+- Worker pool go routine (number of workers and queue size are configurable)
+  - writes an `.xml` file to the `output/{pacs008|pacs009|pacs002|pacs004}/` folder
+  - Graceful shutdown (waits for the worker to complete the current job)
 
 ## Tech Stack
 
@@ -39,9 +39,9 @@ The project follows a modular structure, making it easier to support additional 
 | POST | /api/v1/pacs002/generate | FI To FI Payment Status Reject Or Accept |
 | GET | /api/v1/pacs002/inquiry/:messageId | Inquiry Status pacs002 |
 | POST | /api/v1/pacs004/generate | Payment Refund |
-| GET | /api/v1/pacs004/inquiry/:messageId  | inquiry Status pacs004 |
+| GET | /api/v1/pacs004/inquiry/:messageId  | Inquiry Status pacs004 |
 | POST | /api/v1/pacs009/generate | Financial Institution Credit Transfer |
-| GET | /api/v1/pacs009/inquiry/:messageId | inquiry Status pacs009|
+| GET | /api/v1/pacs009/inquiry/:messageId | Inquiry Status pacs009|
 
 ##  Project Structure
 
@@ -80,8 +80,8 @@ go mod tidy      # unduh dependency gin (butuh akses internet penuh)
 go run main.go
 ```
 
-Server berjalan di `http://localhost:8080` (ubah lewat env `APP_PORT`).
-Konfigurasi lain: `MX_OUTPUT_DIR` (default `./output`).
+Server running at `http://localhost:9090` (change at .env `APP_PORT`).
+other config: `MX_OUTPUT_DIR` (default `./output`).
 
 ## Example using API
 
