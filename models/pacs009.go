@@ -2,9 +2,6 @@ package models
 
 import "encoding/xml"
 
-// Pacs009Document is the root Document element for pacs.009.001.08
-// (FinancialInstitutionCreditTransfer) - used for interbank / cover
-// credit transfers between financial institutions (no underlying customer).
 type Pacs009Document struct {
 	XMLName  xml.Name `xml:"urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08 Document"`
 	FICdtTrf FICdtTrf `xml:"FICdtTrf"`

@@ -2,10 +2,6 @@ package models
 
 import "encoding/xml"
 
-// Pacs002Document is the root Document element for pacs.002.001.10
-// (FIToFIPaymentStatusReport) - used to report the status (accepted,
-// rejected, pending, etc.) of a previously sent payment instruction,
-// and also used as the response body for status inquiries.
 type Pacs002Document struct {
 	XMLName         xml.Name        `xml:"urn:iso:std:iso:20022:tech:xsd:pacs.002.001.10 Document"`
 	FIToFIPmtStsRpt FIToFIPmtStsRpt `xml:"FIToFIPmtStsRpt"`

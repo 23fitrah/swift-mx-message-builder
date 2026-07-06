@@ -13,10 +13,6 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// Pacs002Handler builds a pacs.002.001.10 Payment Status Report MX
-// document - this is the standard way to answer/confirm the status of a
-// previously submitted pacs.008/pacs.009 message - and queues it for
-// asynchronous file generation.
 func Pacs002Handler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		validate := validator.New()

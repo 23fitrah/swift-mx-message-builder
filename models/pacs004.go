@@ -2,9 +2,6 @@ package models
 
 import "encoding/xml"
 
-// Pacs004Document is the root Document element for pacs.004.001.09
-// (PaymentReturn) - used by an agent to return funds to the previous
-// agent in the chain after a settled or rejected credit transfer.
 type Pacs004Document struct {
 	XMLName xml.Name `xml:"urn:iso:std:iso:20022:tech:xsd:pacs.004.001.09 Document"`
 	PmtRtr  PmtRtr   `xml:"PmtRtr"`

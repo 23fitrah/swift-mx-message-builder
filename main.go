@@ -20,9 +20,6 @@ import (
 func main() {
 	cfg := config.Load()
 
-	// Worker pool: writes generated MX (ISO 20022) XML files to disk in
-	// the background so HTTP handlers can respond immediately (202
-	// Accepted) while the actual file I/O happens asynchronously.
 	pool := worker.NewPool(cfg.WorkerCount, cfg.OutputDir, cfg.QueueSize)
 
 	r := gin.Default()
@@ -74,8 +71,6 @@ func main() {
 		}
 	}()
 
-	// Graceful shutdown: stop accepting new requests, then drain the
-	// worker pool so in-flight file writes finish before exiting.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

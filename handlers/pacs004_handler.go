@@ -12,12 +12,6 @@ import (
 	"swift-mx-message-builder/worker"
 )
 
-// Pacs004Request is the JSON payload accepted by POST /pacs004/generate.
-
-// Pacs004Handler builds a pacs.004.001.09 Payment Return MX document -
-// used to send funds back to the previous agent when a credit transfer
-// cannot be applied/settled - and queues it for asynchronous file
-// generation via the worker pool.
 func Pacs004Handler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req pacs004.Pacs004Request

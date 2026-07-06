@@ -12,9 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Pacs009Handler builds a pacs.009.001.08 MX document (interbank / cover
-// credit transfer between financial institutions) and queues it for
-// asynchronous file generation via the worker pool.
 func Pacs009Handler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req pacs009.Pacs009Request

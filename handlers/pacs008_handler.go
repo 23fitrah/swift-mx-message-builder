@@ -14,10 +14,6 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// Pacs008Handler builds a pacs.008.001.08 MX document from the request,
-// hands the marshalled XML off to the worker pool for asynchronous file
-// writing, and immediately returns the generated message ID + PENDING
-// status so the caller can poll the inquiry endpoint.
 func Pacs008Handler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		validate := validator.New()

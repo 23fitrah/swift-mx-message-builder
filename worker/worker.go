@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-// Job represents a single unit of work: write one generated MX message
-// (already-marshalled XML bytes) to the output folder.
 type Job struct {
 	MessageID string // used as the correlation key for status inquiry
 	FileName  string // e.g. PACS0081720000000001.xml
@@ -16,7 +14,6 @@ type Job struct {
 	MsgType   string // sub-folder under the output dir, e.g. "pacs008"
 }
 
-// Status values reported back through GetStatus.
 const (
 	StatusPending    = "PENDING"
 	StatusProcessing = "PROCESSING"
@@ -24,8 +21,6 @@ const (
 	StatusFailed     = "FAILED"
 )
 
-// JobResult tracks the outcome / current state of a submitted Job so
-// that it can be queried later via the inquiry endpoints.
 type JobResult struct {
 	MessageID   string    `json:"message_id"`
 	MsgType     string    `json:"message_type"`
@@ -36,9 +31,6 @@ type JobResult struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-// Pool is a fixed-size worker-goroutine pool that consumes Jobs from a
-// buffered channel and writes each generated MX file to disk, tracking
-// per-message status in a thread-safe in-memory map.
 type Pool struct {
 	jobs      chan Job
 	results   map[string]*JobResult
@@ -103,9 +95,6 @@ func (p *Pool) setStatus(id, msgType, status, path, errMsg string) {
 	p.results[id] = existing
 }
 
-// Submit registers the job as PENDING and pushes it onto the queue so a
-// worker goroutine will pick it up. It never blocks the HTTP handler
-// waiting for the file write to finish - that happens asynchronously.
 func (p *Pool) Submit(job Job) {
 	p.mu.Lock()
 	p.results[job.MessageID] = &JobResult{
@@ -120,7 +109,6 @@ func (p *Pool) Submit(job Job) {
 	p.jobs <- job
 }
 
-// GetStatus looks up the current state of a previously submitted message.
 func (p *Pool) GetStatus(id string) (*JobResult, bool) {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
@@ -132,7 +120,6 @@ func (p *Pool) GetStatus(id string) (*JobResult, bool) {
 	return &cp, true
 }
 
-// Shutdown closes the job channel and waits for in-flight jobs to finish.
 func (p *Pool) Shutdown() {
 	close(p.jobs)
 	p.wg.Wait()

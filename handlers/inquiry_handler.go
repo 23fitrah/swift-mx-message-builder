@@ -8,13 +8,6 @@ import (
 	"swift-mx-message-builder/worker"
 )
 
-// InquiryHandler is a generic "inquiry status message" endpoint used by
-// all four services (pacs008/pacs009/pacs002/pacs004). It reports the
-// current lifecycle status of a previously generated MX message:
-// PENDING -> PROCESSING -> COMPLETED (or FAILED), as tracked by the
-// worker pool that actually writes the file to disk in the background.
-//
-// GET /api/v1/{service}/inquiry/:messageId
 func InquiryHandler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		messageId := c.Param("messageId")
