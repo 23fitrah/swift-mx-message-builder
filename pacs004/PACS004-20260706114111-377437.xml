@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.004.001.09">
+  <PmtRtr>
+    <GrpHdr>
+      <MsgId>PACS004-20260706114111-377437</MsgId>
+      <CreDtTm>2026-07-06T11:41:11+07:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+    </GrpHdr>
+    <TxInf>
+      <RtrId>RTR-20260706114111-28779D</RtrId>
+      <OrgnlTxId>TX-20260706150000-AAAAAA</OrgnlTxId>
+      <RtrdIntrBkSttlmAmt Ccy="IDR">1.5e+07</RtrdIntrBkSttlmAmt>
+      <RtrRsnInf>
+        <Rsn>
+          <Cd>AC04</Cd>
+        </Rsn>
+        <AddtlInf>Account closed</AddtlInf>
+      </RtrRsnInf>
+    </TxInf>
+  </PmtRtr>
+</Document>

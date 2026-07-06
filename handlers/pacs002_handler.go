@@ -10,6 +10,7 @@ import (
 	"swift-mx-message-builder/worker"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 // Pacs002Handler builds a pacs.002.001.10 Payment Status Report MX
@@ -18,11 +19,18 @@ import (
 // asynchronous file generation.
 func Pacs002Handler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		validate := validator.New()
 		var req pacs002.Pacs002Request
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+
+		if err := validate.Struct(req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": utils.FormatValidationErrors(err)})
+			return
+		}
+
 		var reqPayload = req.Payload
 
 		msgId := utils.GenerateMessageID("PACS002")

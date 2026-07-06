@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.10">
+  <FIToFIPmtStsRpt>
+    <GrpHdr>
+      <MsgId>PACS002-20260706114047-C4AB92</MsgId>
+      <CreDtTm>2026-07-06T11:40:47+07:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+    </GrpHdr>
+    <OrgnlGrpInfAndSts>
+      <OrgnlMsgId>PACS008-20260706113718-A4A64B</OrgnlMsgId>
+      <OrgnlMsgNmId>pacs.008.001.08</OrgnlMsgNmId>
+      <GrpSts>ACSC</GrpSts>
+    </OrgnlGrpInfAndSts>
+    <TxInfAndSts>
+      <OrgnlEndToEndId>E2E-INV-0001</OrgnlEndToEndId>
+      <TxSts>ACSC</TxSts>
+    </TxInfAndSts>
+  </FIToFIPmtStsRpt>
+</Document>

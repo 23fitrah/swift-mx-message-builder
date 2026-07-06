@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 // Config holds runtime settings for the MX builder service.
 type Config struct {
@@ -13,9 +17,10 @@ type Config struct {
 // Load reads configuration from environment variables, falling back to
 // sensible defaults for local development.
 func Load() Config {
+	_ = godotenv.Load() // Load .env file
 	return Config{
-		Port:        getEnv("APP_PORT", "8080"),
-		OutputDir:   getEnv("MX_OUTPUT_DIR", ""),
+		Port:        os.Getenv("APP_PORT"),
+		OutputDir:   os.Getenv("MX_OUTPUT_DIR"),
 		WorkerCount: 5,
 		QueueSize:   100,
 	}

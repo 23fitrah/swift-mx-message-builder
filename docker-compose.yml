@@ -7,10 +7,10 @@ services:
     env_file:
       - .env
     ports:
-      - "${SERVER_PORT}:8080"
+      - "${SERVER_PORT}:9090"
 
   jenkins:
-    image: jenkins/jenkins:lts-jdk17   # image resmi Jenkins LTS terbaru, sudah dengan JDK 17
+    image: jenkins/jenkins:latest   # image resmi Jenkins LTS terbaru, sudah dengan JDK 21
     container_name: jenkins
     restart: unless-stopped
     user: root                         # supaya bisa akses docker.sock (build image di dalam pipeline)

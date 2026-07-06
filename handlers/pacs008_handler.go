@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"swift-mx-message-builder/worker"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 // Pacs008Handler builds a pacs.008.001.08 MX document from the request,
@@ -18,11 +20,20 @@ import (
 // status so the caller can poll the inquiry endpoint.
 func Pacs008Handler(pool *worker.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		validate := validator.New()
 		var req pacs008.Pacs008Request
+
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid JSON format"})
 			return
 		}
+
+		if err := validate.Struct(req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": utils.FormatValidationErrors(err)})
+			log.Printf("Validation error: %v", err)
+			return
+		}
+
 		var reqPayload = req.Payload
 		msgId := utils.GenerateMessageID("PACS008")
 		txId := utils.GenerateMessageID("TX")
