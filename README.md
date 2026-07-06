@@ -21,16 +21,25 @@ The project follows a modular structure, making it easier to support additional 
   menulis file `.xml` ke folder `output/{pacs008|pacs009|pacs002|pacs004}/`
 - Graceful shutdown (menunggu worker menyelesaikan job yang sedang berjalan)
 
+## Tech Stack
+
+* Go (Golang)
+* Gin Framework
+* Docker Container
+* Unit Test
+* CI/CD Jenkins
+* Rabbit MQ
+
 ##  Project Structure
 
 ```
 swift-mx-builder/
-├── main.go                     # entrypoint, routing Gin
+├── main.go                      # entrypoint, routing Gin
 ├── config/
-│   └── config.go               # konfigurasi (port, output dir, worker count)
-├── dto                         # request input
+│   └── config.go                # configuration (port, output dir, worker count)
+├── dto/                         # request input
 ├── models/
-│   ├── common.go                # tipe bersama (GroupHeader, Party, dst.)
+│   ├── common.go                # shared type (GroupHeader, Party, dst.)
 │   ├── pacs008.go               # struct XML pacs.008.001.08
 │   ├── pacs009.go               # struct XML pacs.009.001.08
 │   ├── pacs002.go               # struct XML pacs.002.001.10
@@ -40,7 +49,7 @@ swift-mx-builder/
 │   ├── pacs009_handler.go       # POST /pacs009/generate
 │   ├── pacs002_handler.go       # POST /pacs002/generate
 │   ├── pacs004_handler.go       # POST /pacs004/generate
-│   └── inquiry_handler.go       # GET /{service}/inquiry/:messageId (generik, dipakai 4 service)
+│   └── inquiry_handler.go       # GET /{service}/inquiry/:messageId (generic, used 4 services)
 ├── worker/
 │   └── worker.go                 # worker pool goroutine + status tracking
 ├── utils/
@@ -48,7 +57,7 @@ swift-mx-builder/
 │   ├── auth.go                   # Authorization middleware
 │   ├── validation.go             # validation input
 │   └── idgen.go                  # generator MsgId, TxId, UETR
-└── output/                       # folder tujuan file MX hasil generate
+└── output/                       # folder for result generate file mx
 ```
 
 ## Running
@@ -61,7 +70,7 @@ go run main.go
 Server berjalan di `http://localhost:8080` (ubah lewat env `APP_PORT`).
 Konfigurasi lain: `MX_OUTPUT_DIR` (default `./output`).
 
-## Example API
+## Example using API
 
 ### 1. Generate pacs.008 (Customer Credit Transfer)
 
@@ -153,8 +162,13 @@ curl -X POST http://localhost:8080/api/v1/pacs004/generate \
   }'
 ```
 
-## Catatan Implementasi
+## Notes
 
 - The XML models in the models/ directory are based on a simplified version of the ISO 20022 schema. Core elements such as GrpHdr, CdtTrfTxInf, PmtId, IntrBkSttlmAmt, TxSts, and RtrRsnInf follow the official SWIFT MX element names. If full ISO 20022 compliance is required, additional mandatory elements (such as Ccy, PstlAdr, RgltryRptg, and others) should be added according to the relevant message specification.
 - The worker pool currently runs within a single process and keeps job status in memory. This works well for development and single-instance deployments. For production environments with multiple instances or pods, use a shared storage such as Redis or a database so job status can be accessed consistently across all instances.
 - Run go mod tidy in an environment with internet access before building the project. Some Go module hosts may not be reachable in restricted or sandboxed environments, which can prevent dependencies from being downloaded successfully.
+
+## License
+
+This project is intended for portfolio demonstration.
+
