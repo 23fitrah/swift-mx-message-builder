@@ -83,24 +83,30 @@ go run main.go
 Server running at `http://localhost:9090` (change at .env `APP_PORT`).
 other config: `MX_OUTPUT_DIR` (default `./output`).
 
-## Example using API
+## Example using API (using curl)
 
 ### 1. Generate pacs.008 (Customer Credit Transfer)
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/pacs008/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "end_to_end_id": "E2E-INV-0001",
-    "amount": 15000000,
-    "currency": "IDR",
-    "debtor_name": "PT Sumber Makmur",
-    "debtor_agent_bic": "CENAIDJAXXX",
-    "creditor_name": "PT Cahaya Abadi",
-    "creditor_agent_bic": "BMRIIDJAXXX",
-    "remittance_info": "Payment for invoice INV-0001",
-    "settlement_method": "CLRG"
-  }'
+curl --location 'http://localhost:9090/api/v1/pacs008/generate' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data-raw '{
+    "user_id": "your_userid",
+    "password": "your_password",
+    "payload": {
+        "instr_id": "INSTR-0001",
+        "end_to_end_id": "E2E-INV-0001",
+        "amount": 1500,
+        "currency": "IDR",
+        "debtor_name": "PT Sumber Makmur",
+        "debtor_agent_bic": "CENAIDJAXXX",
+        "creditor_name": "PT Cahaya Abadi",
+        "creditor_agent_bic": "BMRIIDJAXXX",
+        "remittance_info": "Payment for invoice INV-0001",
+        "settlement_method": "CLRG"
+    }
+}'
 ```
 
 Response (200 Accepted):
@@ -118,7 +124,8 @@ Response (200 Accepted):
 ### 2. Check status (inquiry)
 
 ```bash
-curl http://localhost:8080/api/v1/pacs008/inquiry/PACS008-20260706153012-A1B2C3
+curl --location 'http://localhost:9090/api/v1/pacs008/inquiry/PACS008-20260706124841-6623EB' \
+--header 'Authorization: Bearer YOUR_TOKEN'
 ```
 
 ```json
@@ -135,44 +142,82 @@ curl http://localhost:8080/api/v1/pacs008/inquiry/PACS008-20260706153012-A1B2C3
 ### 3. Generate pacs.009 (Financial Institution Credit Transfer)
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/pacs009/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "end_to_end_id": "E2E-COVER-0001",
-    "amount": 500000,
-    "currency": "USD",
-    "debtor_bic": "CENAIDJAXXX",
-    "debtor_agent_bic": "CHASUS33XXX",
-    "creditor_agent_bic": "DEUTDEFFXXX",
-    "creditor_bic": "BMRIIDJAXXX"
-  }'
+curl --location 'http://localhost:9090/api/v1/pacs009/generate' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data-raw '{
+    "user_id": "your_userid",
+    "password": "your_password",
+    "payload": {
+        "instr_id": "INSTR-COVER-0001",
+        "end_to_end_id": "E2E-COVER-0001",
+        "amount": 500000,
+        "currency": "USD",
+        "debtor_bic": "CENAIDJAXXX",
+        "debtor_agent_bic": "CHASUS33XXX",
+        "creditor_agent_bic": "DEUTDEFFXXX",
+        "creditor_bic": "BMRIIDJAXXX",
+        "settlement_method": "COVE"
+    }
+}'
 ```
 
-### 4. Generate pacs.002 (Payment Status Report)
+### 4. Generate pacs.002 (Payment Status Reject Or Accept)
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/pacs002/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "original_msg_id": "PACS008-20260706153012-A1B2C3",
-    "original_msg_name_id": "pacs.008.001.08",
-    "original_end_to_end_id": "E2E-INV-0001",
-    "tx_status": "ACSC"
-  }'
+curl --location 'http://localhost:9090/api/v1/pacs002/generate' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data-raw '{
+    "user_id": "your_userid",
+    "password": "your_password",
+    "payload": {
+        "original_msg_id": "PACS008-20260706124841-6623EB",
+        "original_msg_name_id": "pacs.008.001.08",
+        "original_end_to_end_id": "E2E-INV-0001",
+        "tx_status": "RJCT",
+        "group_status": "RJCT",
+        "reason_code": "AC04",
+        "additional_info": "Account closed"
+    }
+}'
+```
+
+```bash
+curl --location 'http://localhost:9090/api/v1/pacs002/generate' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data-raw '{
+    "user_id": "your_token",
+    "password": "your_password",
+    "payload": {
+        "original_msg_id": "PACS008-20260706124841-6623EB",
+        "original_msg_name_id": "pacs.008.001.08",
+        "original_end_to_end_id": "E2E-INV-0001",
+        "tx_status": "ACSC",
+        "group_status": "ACSC"
+    }
+}'
 ```
 
 ### 5. Generate pacs.004 (Payment Return)
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/pacs004/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "original_end_to_end_id": "E2E-INV-0001",
-    "returned_amount": 15000000,
-    "currency": "IDR",
-    "reason_code": "AC04",
-    "additional_info": "Account closed"
-  }'
+curl --location 'http://localhost:9090/api/v1/pacs004/generate' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data-raw '{
+    "user_id": "your_userid",
+    "password": "your_password",
+    "payload": {
+        "original_end_to_end_id": "E2E-INV-0001",
+        "original_tx_id": "TX-20260706150000-AAAAAA",
+        "returned_amount": 15000000,
+        "currency": "IDR",
+        "reason_code": "AC04",
+        "additional_info": "Account closed"
+    }
+}'
 ```
 
 ## Notes
