@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08">
+  <FIToFICstmrCdtTrf>
+    <GrpHdr>
+      <MsgId>PACS008-20260706130234-3892B3</MsgId>
+      <CreDtTm>2026-07-06T13:02:34+07:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <SttlmInf>
+        <SttlmMtd>CLRG</SttlmMtd>
+      </SttlmInf>
+    </GrpHdr>
+    <CdtTrfTxInf>
+      <PmtId>
+        <InstrId>INSTR-0001</InstrId>
+        <EndToEndId>E2E-INV-0001</EndToEndId>
+        <TxId>TX-20260706130234-B24F98</TxId>
+        <UETR>da4c8714-7687-4fe0-a7f2-77d63e08e9ba</UETR>
+      </PmtId>
+      <IntrBkSttlmAmt Ccy="IDR">1500</IntrBkSttlmAmt>
+      <Dbtr>
+        <Nm>PT Sumber Makmur</Nm>
+      </Dbtr>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFI>CENAIDJAXXX</BICFI>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtrAgt>
+        <FinInstnId>
+          <BICFI>BMRIIDJAXXX</BICFI>
+        </FinInstnId>
+      </CdtrAgt>
+      <Cdtr>
+        <Nm>PT Cahaya Abadi</Nm>
+      </Cdtr>
+      <RmtInf>
+        <Ustrd>Payment for invoice INV-0001</Ustrd>
+      </RmtInf>
+    </CdtTrfTxInf>
+  </FIToFICstmrCdtTrf>
+</Document>
