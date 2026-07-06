@@ -30,6 +30,19 @@ The project follows a modular structure, making it easier to support additional 
 * CI/CD Jenkins
 * Rabbit MQ
 
+## API List
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /api/v1/pacs008/generate | FI To FI Customer Credit Transfer |
+| GET | /api/v1/pacs008/inquiry/:messageId | Inquiry Status pacs008 |
+| POST | /api/v1/pacs002/generate | FI To FI Payment Status Reject Or Accept |
+| GET | /api/v1/pacs002/inquiry/:messageId | Inquiry Status pacs002 |
+| POST | /api/v1/pacs004/generate | Payment Refund |
+| GET | /api/v1/pacs004/inquiry/:messageId  | inquiry Status pacs004 |
+| POST | /api/v1/pacs009/generate | Financial Institution Credit Transfer |
+| GET | /api/v1/pacs009/inquiry/:messageId | inquiry Status pacs009|
+
 ##  Project Structure
 
 ```

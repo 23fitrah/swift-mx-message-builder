@@ -2,7 +2,6 @@ package pacs009
 
 import "swift-mx-message-builder/dto/general"
 
-// Pacs009Request is the JSON payload accepted by POST /pacs009/generate.
 type Pacs009Request struct {
 	general.GeneralRequest
 	Payload FieldPacs009 `json:"payload" validate:"required"`
