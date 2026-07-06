@@ -2,3 +2,4 @@ output/
 *.log
 .env
 vendor/
+output/*/*.xml
