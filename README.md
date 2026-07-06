@@ -161,6 +161,7 @@ curl --location 'http://localhost:9090/api/v1/pacs009/generate' \
     }
 }'
 ```
+Builder message pacs009 result : [PACS009-20260706131223-94AD66.xml](output/pacs004/PACS009-20260706131223-94AD66.xml)
 
 ### 4. Generate pacs.002 (Payment Status Reject Or Accept)
 
@@ -182,6 +183,7 @@ curl --location 'http://localhost:9090/api/v1/pacs002/generate' \
     }
 }'
 ```
+Builder message pacs002 result : [PACS002-20260706131322-070AAB.xml](output/pacs004/PACS002-20260706131322-070AAB.xml)
 
 ```bash
 curl --location 'http://localhost:9090/api/v1/pacs002/generate' \
@@ -219,7 +221,7 @@ curl --location 'http://localhost:9090/api/v1/pacs004/generate' \
     }
 }'
 ```
-Builder Message pacs004 result : [PACS004-20260706130517-B89A1C.xml](output/pacs004/PACS004-20260706130517-B89A1C.xml)
+Builder message pacs004 result : [PACS004-20260706130517-B89A1C.xml](output/pacs004/PACS004-20260706130517-B89A1C.xml)
 
 ## Notes
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08">
+  <FICdtTrf>
+    <GrpHdr>
+      <MsgId>PACS009-20260706131223-94AD66</MsgId>
+      <CreDtTm>2026-07-06T13:12:23+07:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <SttlmInf>
+        <SttlmMtd>COVE</SttlmMtd>
+      </SttlmInf>
+    </GrpHdr>
+    <CdtTrfTxInf>
+      <PmtId>
+        <InstrId>INSTR-COVER-0001</InstrId>
+        <EndToEndId>E2E-COVER-0001</EndToEndId>
+        <TxId>TX-20260706131223-024306</TxId>
+        <UETR>c2cc3d4e-c3f9-47f2-940a-a7767d37aff3</UETR>
+      </PmtId>
+      <IntrBkSttlmAmt Ccy="USD">500000</IntrBkSttlmAmt>
+      <Dbtr>
+        <FinInstnId>
+          <BICFI>CENAIDJAXXX</BICFI>
+        </FinInstnId>
+      </Dbtr>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFI>CHASUS33XXX</BICFI>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtrAgt>
+        <FinInstnId>
+          <BICFI>DEUTDEFFXXX</BICFI>
+        </FinInstnId>
+      </CdtrAgt>
+      <Cdtr>
+        <FinInstnId>
+          <BICFI>BMRIIDJAXXX</BICFI>
+        </FinInstnId>
+      </Cdtr>
+    </CdtTrfTxInf>
+  </FICdtTrf>
+</Document>
